@@ -1,4 +1,5 @@
 const express = require("express");
+const produtoRoutes = require("./src/routes/produto.routes");
 
 const app = express();
 
@@ -8,15 +9,8 @@ app.get("/", (req, res) => {
   res.send("API funcionando!");
 });
 
-const produtos = [
-  { id: 1, nome: "Notebook", preco: 3500 },
-  { id: 2, nome: "Mouse", preco: 120 }
-];
-
-app.get("/produtos", (req, res) => {
-  res.status(200).json(produtos);
-});
+app.use("/produtos", produtoRoutes);
 
 app.listen(3000, () => {
-  console.log("API rodando na porta 3000");
+  console.log("Servidor rodando na porta 3000");
 });
