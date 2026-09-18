@@ -1,6 +1,9 @@
-const produtos = [ 
-    { id: 1, nome: "Notebook", preco: 3500 },
-    { id: 2, nome: "Mouse", preco: 120}
+const Produto = require("../model.js/produto.model.js");
+
+const produtos = [
+    new Produto(1, "Notebook", 3500),
+    new Produto(2, "Mouse", 120)
+
 ];
 
 function listar(filtros = {}) {
