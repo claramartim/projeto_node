@@ -1,12 +1,11 @@
-const Produto = require("../model.js/produto.model.js");
+import Produto from '../models/produto.model.js';
 
 const produtos = [
     new Produto(1, "Notebook", 3500),
     new Produto(2, "Mouse", 120)
-
 ];
 
-function listar(filtros = {}) {
+function listar(filtros: any = {}) {
     let resultado = produtos;
 
     if(filtros.nome) {
@@ -18,26 +17,26 @@ function listar(filtros = {}) {
     return resultado;
 }
 
-function buscarPorId(id) {
+function buscarPorId(id: any) {
     return produtos.find((p) => p.id === Number(id));
 }
 
-function criar(dados) {
+function criar(dados: any) {
     if(!dados.nome || dados.preco == null) {
         throw new Error("Nome e preços são obrigatórios.");
     }
 
     const novoProduto = {
-        id: produtos.length ? produtos[produtos.length - 1 ].id +  1 : 1,
+        id: produtos.length ? produtos[produtos.length - 1 ]!.id +  1 : 1,
         nome: dados.nome,
         preco: dados.preco
     };
 
-    produtos.push(novoProduto);
+    produtos.push(novoProduto as any);
     return novoProduto;
 }
 
-function atualizarTotal(id, dados) {
+function atualizarTotal(id: any, dados: any) {
     const index = produtos.findIndex((p) => p.id === Number(id));
     if (index === -1) return null;
 
@@ -49,12 +48,12 @@ function atualizarTotal(id, dados) {
         id: Number(id),
         nome: dados.nome,
         preco: dados.preco
-    };
+    } as any;
 
     return produtos[index];
 }
 
-function atualizarParcial(id, dados) {
+function atualizarParcial(id: any, dados: any) {
     const produto = produtos.find((p) => p.id === Number(id));
     if (!produto) return null;
 
@@ -64,7 +63,7 @@ function atualizarParcial(id, dados) {
     return produto;
 }
 
-function deletar(id) {
+function deletar(id: any) {
     const index = produtos.findIndex((p) => p.id === Number(id));
     if (index === -1) return false;
 
@@ -72,7 +71,7 @@ function deletar(id) {
     return true;
 }
 
-module.exports = {
+export default {
     listar, 
     buscarPorId,
     criar,
