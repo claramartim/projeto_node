@@ -1,73 +1,55 @@
-import Produto from '../models/produto.model.js';
+import Produto, { IProduto } from '../models/produto.model.js';
 
-const produtos = [
-    new Produto(1, "Notebook", 3500),
-    new Produto(2, "Mouse", 120)
-];
-
-function listar(filtros: any = {}) {
-    let resultado = produtos;
-
+export async function listar(filtros: any = {}){
     if(filtros.nome) {
-        resultado = resultado.filter(
-            p => p.nome.toLowerCase().includes(filtros.nome.toLowerCase())
-        );
+        return await Produto.findAll({
+            where: { nome: filtros.nome}
+        });
     }
-
-    return resultado;
+    return await Produto.findAll();
 }
 
-function buscarPorId(id: any) {
-    return produtos.find((p) => p.id === Number(id));
+export async function buscarPorId(id: any) {
+    return await Produto.findByPk(id);
 }
 
-function criar(dados: any) {
-    if(!dados.nome || dados.preco == null) {
-        throw new Error("Nome e preços são obrigatórios.");
+export async function criar(dados: IProduto) {
+    if (!dados.nome || dados.nome.trim() === '' || dados.preco == null) {
+        throw new Error("Nome e preco é obrigatório.");
     }
 
-    const novoProduto = {
-        id: produtos.length ? produtos[produtos.length - 1 ]!.id +  1 : 1,
+    return await Produto.create({
         nome: dados.nome,
         preco: dados.preco
-    };
-
-    produtos.push(novoProduto as any);
-    return novoProduto;
+    }); 
 }
 
-function atualizarTotal(id: any, dados: any) {
-    const index = produtos.findIndex((p) => p.id === Number(id));
-    if (index === -1) return null;
+export async function atualizarTotal(id: any, dados: IProduto) {
+    const produto = await Produto.findByPk(id);
+    if (!produto) return  null;
 
-    if (!dados.nome || dados.preco == null) {
+    if (!dados.nome || dados.nome.trim() === '' || dados.preco == null) {
         throw new Error("PUT exige o envio completo de 'nome' e 'preco'.");
     }
 
-    produtos[index] = {
-        id: Number(id),
-        nome: dados.nome,
-        preco: dados.preco
-    } as any;
-
-    return produtos[index];
+    return await produto.update(dados);
 }
 
-function atualizarParcial(id: any, dados: any) {
-    const produto = produtos.find((p) => p.id === Number(id));
+export async function atualizarParcial(id: any, dados: Partial<IProduto>) {
+    const produto = await Produto.findByPk(id);
     if (!produto) return null;
 
     if (dados.nome !== undefined) produto.nome = dados.nome;
     if (dados.preco !== undefined) produto.preco = dados.preco;
 
-    return produto;
+    return await produto.save();
 }
 
-function deletar(id: any) {
-    const index = produtos.findIndex((p) => p.id === Number(id));
-    if (index === -1) return false;
+export  async function deletar(id: any) {
+    const produto = await Produto.findByPk(id);
+    if (!produto) return false;
 
-    produtos.splice(index, 1);
+    await produto.destroy();
     return true;
 }
 

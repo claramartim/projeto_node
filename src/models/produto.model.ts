@@ -1,16 +1,18 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, Optional} from 'sequelize';
 import sequelize from '../config/database.js';
 
 export interface IProduto{
-    id: number;
+    id?: number;
     nome: string;
     preco: number;
 }
 
-class Produto extends Model<IProduto> implements IProduto{
-        public id!: number;
-        public nome!: string;
-        public preco!: number;
+export interface ProdutoCreationAttributes extends Optional<IProduto, 'id'> {}
+
+class Produto extends Model<IProduto, ProdutoCreationAttributes> implements IProduto{
+        declare id: number;
+        declare nome: string;
+        declare preco: number;
     }
 
 Produto.init({
